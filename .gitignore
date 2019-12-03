@@ -1,2 +1,4 @@
 .scrapy/**
 \_\_**
+build/**
+*egg-info/**
