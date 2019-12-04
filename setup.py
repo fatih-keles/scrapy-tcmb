@@ -11,7 +11,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='tcmb',
-    version='0.1.0',
+    version=2,
     description='A data scraper for importing XML files from tcmb.gov.tr',
     long_description='I would just open("README.md").read() here',
     author='Fatih Keles',

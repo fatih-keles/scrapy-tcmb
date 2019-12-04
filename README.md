@@ -6,7 +6,7 @@
 ```
 pip install scrapyd-client
 ```
-[Error: scrapyd-deploy is not recognized as an internal or external command](#scrapyd-deploy-is-not-recognized-as-an-internal-or-external-command)
+[Resolve 'scrapyd-deploy' is not recognized as an internal or external command](#scrapyd-deploy-is-not-recognized-as-an-internal-or-external-command)
 
 2. Create a deploy profile in scrapy configuration file. File is named scrapy.cfg and can be found in project folder.
 
@@ -39,7 +39,7 @@ default              http://localhost:6800/
 
 4. Run deploy command, you should see 200 Http response code and a JSON similar to below
 ```
-(base) C:\Users\fakeles\Desktop\py-project\data-scraper\tcmb>scrapyd-deploy
+(base) C:\Users\fakeles\Desktop\py-project\data-scraper\tcmb>scrapyd-deploy -v 1
 C:\Anaconda3\Scripts\scrapyd-deploy:23: ScrapyDeprecationWarning: Module `scrapy.utils.http` is deprecated, Please import from `w3lib.http` instead.
   from scrapy.utils.http import basic_auth_header
 Packing version 1575403501
@@ -47,10 +47,43 @@ Deploying to project "tcmb" in http://localhost:6800/addversion.json
 Server response (200):
 {"node_name": "fkeles-scrapyd-server", "status": "ok", "project": "tcmb", "version": "1575403501", "spiders": 1}
 ```
-[Deployment error messages](#Deployment-error-messages)
-  
-  
-$ curl http://localhost:6800/schedule.json -d project=myproject -d spider=somespider -d setting=DOWNLOAD_DELAY=2 -d arg1=val1
+[Resolve deployment errors](#Deployment-errors)
+
+5. List projects and versions, delete
+```
+(base) C:\Users\fakeles\Desktop\py-project\data-scraper\tcmb>curl http://localhost:6800/listprojects.json
+{"node_name": "fkeles-scrapyd-server", "status": "ok", "projects": ["myproject", "tcmb"]}
+(base) C:\Users\fakeles\Desktop\py-project\data-scraper\tcmb>curl http://localhost:6800/listversions.json?project=tcmb
+{"node_name": "fkeles-scrapyd-server", "status": "ok", "versions": ["1"]}
+(base) C:\Users\fakeles\Desktop\py-project\data-scraper\tcmb>curl http://localhost:6800/delproject.json -d project=tcmb
+{"node_name": "fkeles-scrapyd-server", "status": "ok"}
+```
+
+6. Schedule a job for downloading whole 1999 year data, list scheduled jobs
+```
+(base) C:\Users\fakeles\Desktop\py-project\data-scraper\tcmb>curl http://localhost:6800/schedule.json -d project=tcmb -d spider=tcmb -d directory=. -d save-xml=false -d append-csv=false -d date-start=1999-01-01 -d date-end=1999-12-31
+{"node_name": "fkeles-scrapyd-server", "status": "ok", "jobid": "86a5ea9416a711eaa13e8956a92e6e77"}
+
+(base) C:\Users\fakeles\Desktop\py-project\data-scraper\tcmb>curl http://localhost:6800/listjobs.json?project=tcmb | python -m json.tool
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100   219  100   219    0     0   1921      0 --:--:-- --:--:-- --:--:--  1921
+{
+    "node_name": "fkeles-scrapyd-server",
+    "status": "ok",
+    "pending": [],
+    "running": [
+        {
+            "id": "86a5ea9416a711eaa13e8956a92e6e77",
+            "spider": "tcmb",
+            "pid": 28512,
+            "start_time": "2019-12-04 15:05:37.364675"
+        }
+    ],
+    "finished": []
+}
+```
+
 
 ### Error Messages
 
@@ -67,7 +100,7 @@ Create a bat file around Python file scrapyd-deploy in C:\Anaconda3\Scripts (or 
 C:\Anaconda3\python C:\Anaconda3\Scripts\scrapyd-deploy %*
 ```
 
-#### Deployment error messages
+#### Deployment errors
 If you get error messages you should resolve them. Below message is about a missing library ([cx_Oracle](https://cx-oracle.readthedocs.io/en/latest/user_guide/installation.html)) on server side, after installing it I was able to deploy without any issues. 
   ```
   (base) C:\Users\fakeles\Desktop\py-project\data-scraper\tcmb>scrapyd-deploy
