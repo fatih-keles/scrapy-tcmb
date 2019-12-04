@@ -17,5 +17,7 @@ setup(
     author='Fatih Keles',
     author_email='fatihkeles@gmail.com',
     url='https://github.com/fatih-keles/scrapy-tcmb',
-    packages=find_packages(exclude=['*tests*']),
+    #packages=find_packages(exclude=['*tests*']),
+    packages=find_packages(),
+    entry_points={'scrapy': ['settings = tcmb.settings']},
 )
