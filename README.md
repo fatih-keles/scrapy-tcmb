@@ -6,17 +6,7 @@
 ```
 pip install scrapyd-client
 ```
-  * If you get errors about scrapyd-client commands not known for windows environment 
-```
-(base) C:\Users\fakeles\Desktop\py-project\data-scraper\tcmb>scrapyd-deploy
-'scrapyd-deploy' is not recognized as an internal or external command,
-operable program or batch file.
-```
-  * Create a bat file around Python file scrapyd-deploy in C:\Anaconda3\Scripts (or in your own python environment, I am using Anaconda3)
-```
-@echo off
-C:\Anaconda3\python C:\Anaconda3\Scripts\scrapyd-deploy %*
-```
+[Error: scrapyd-deploy is not recognized as an internal or external command](#scrapyd-deploy-is-not-recognized-as-an-internal-or-external-command)
 
 2. Create a deploy profile in scrapy configuration file. File is named scrapy.cfg and can be found in project folder.
 
@@ -57,7 +47,28 @@ Deploying to project "tcmb" in http://localhost:6800/addversion.json
 Server response (200):
 {"node_name": "fkeles-scrapyd-server", "status": "ok", "project": "tcmb", "version": "1575403501", "spiders": 1}
 ```
-  * If you get error messages you should resolve them. Below message is about a missing library (cx_Oracle) on server side, after installing it I was able to deploy without any issues. 
+[Deployment error messages](#Deployment-error-messages)
+  
+  
+$ curl http://localhost:6800/schedule.json -d project=myproject -d spider=somespider -d setting=DOWNLOAD_DELAY=2 -d arg1=val1
+
+### Error Messages
+
+#### scrapyd-deploy is not recognized as an internal or external command
+If you get errors about scrapyd-client commands not known for windows environment 
+```
+(base) C:\Users\fakeles\Desktop\py-project\data-scraper\tcmb>scrapyd-deploy
+'scrapyd-deploy' is not recognized as an internal or external command,
+operable program or batch file.
+```
+Create a bat file around Python file scrapyd-deploy in C:\Anaconda3\Scripts (or in your own python environment, I am using Anaconda3)
+```
+@echo off
+C:\Anaconda3\python C:\Anaconda3\Scripts\scrapyd-deploy %*
+```
+
+#### Deployment error messages
+If you get error messages you should resolve them. Below message is about a missing library ([cx_Oracle](https://cx-oracle.readthedocs.io/en/latest/user_guide/installation.html)) on server side, after installing it I was able to deploy without any issues. 
   ```
   (base) C:\Users\fakeles\Desktop\py-project\data-scraper\tcmb>scrapyd-deploy
 C:\Anaconda3\Scripts\scrapyd-deploy:23: ScrapyDeprecationWarning: Module `scrapy.utils.http` is deprecated, Please import from `w3lib.http` instead.
