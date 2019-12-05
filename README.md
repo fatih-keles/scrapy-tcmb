@@ -59,9 +59,9 @@ Server response (200):
 {"node_name": "fkeles-scrapyd-server", "status": "ok"}
 ```
 
-6. Schedule a job for downloading whole 1999 year data, list scheduled jobs
+6. Schedule a job for downloading whole 2000 year data, list scheduled jobs
 ```
-(base) C:\Users\fakeles\Desktop\py-project\data-scraper\tcmb>curl http://localhost:6800/schedule.json -d project=tcmb -d spider=tcmb -d directory=. -d save-xml=false -d append-csv=false -d date-start=1999-01-01 -d date-end=1999-12-31
+(base) C:\Users\fakeles\Desktop\py-project\data-scraper\tcmb>curl http://localhost:6800/schedule.json -d project=tcmb -d spider=tcmb --d setting=loglevel=INFO d directory=. -d save-xml=false -d append-csv=false -d date-start=2000-01-01 -d date-end=2000-12-31
 {"node_name": "fkeles-scrapyd-server", "status": "ok", "jobid": "86a5ea9416a711eaa13e8956a92e6e77"}
 
 (base) C:\Users\fakeles\Desktop\py-project\data-scraper\tcmb>curl http://localhost:6800/listjobs.json?project=tcmb | python -m json.tool
@@ -84,6 +84,30 @@ Server response (200):
 }
 ```
 
+## Deploy with .egg file
+1. Create setup.py script
+```python
+from setuptools import setup, find_packages
+
+setup(
+    name='tcmb',
+    version=2,
+    description='A data scraper for importing XML files from tcmb.gov.tr',
+    long_description='I would just open("README.md").read() here',
+    author='Fatih Keles',
+    author_email='fatihkeles@gmail.com',
+    url='https://github.com/fatih-keles/scrapy-tcmb',
+    #packages=find_packages(exclude=['*tests*']),
+    packages=find_packages(),
+    entry_points={'scrapy': ['settings = tcmb.settings']},
+)
+```
+2. Generate .egg file
+```
+$ python setup.py bdist_egg
+```
+
+For more on ```setuptools``` and ```setup.py``` see [tutorial](https://pythonhosted.org/an_example_pypi_project/setuptools.html)
 
 ### Error Messages
 
